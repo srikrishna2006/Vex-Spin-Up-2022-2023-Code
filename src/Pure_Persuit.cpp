@@ -28,6 +28,14 @@ void pp::setTrackWidth(double width)
 {
   trackWidth = width;
 }
+void pp::setWeightSmooth(double w)
+{
+  weightSmooth = w;
+}
+void pp::setTolerance(double t)
+{
+  tolerance = t;
+}
 double pp::getLookAhead()
 {
   return lookAheadDist;
@@ -51,6 +59,12 @@ void pp::injection(std::vector<Vector> &v)
     }
   }
   newPoints.push_back(lastPoint);
+  Vector dir = v[v.size()-1].subtraction(v[v.size()-2]);
+  dir = dir.normalize();
+  Vector f = {v[v.size()-1].getX(), v[v.size()-1].getY()};
+  f = f.addition(Vector({dir.getX()*getLookAhead(), dir.getY()*getLookAhead()}));
+  newPoints.push_back(f);
+
   for (int i = 0; i < newPoints.size(); i++) 
   {
     printf("injection: %f, %f,\n", newPoints[i].getX(), newPoints[i].getY());

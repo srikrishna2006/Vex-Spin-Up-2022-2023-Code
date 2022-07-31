@@ -35,40 +35,12 @@ void autonomous(void) {
   std::vector<Vector> v1{{0,0},{10,10},{15,15}};// path
   std::vector<Vector> v2{{15,15},{10,10},{0,0}};// path
   pp p(&O);
+  p.setWeightSmooth(0.90);
   p.setLookAheadDist(8); // Tune between 0 and 2*radius
-
-  std::vector<Vector> v = v1;
-  
-  Vector dir = v[v.size()-1].subtraction(v[v.size()-2]);
-  dir = dir.normalize();
-  Vector f = {v[v.size()-1].getX(), v[v.size()-1].getY()};
-  f = f.addition(Vector({dir.getX()*p.getLookAhead(), dir.getY()*p.getLookAhead()}));
-  v.push_back(f);
-  
-  p.injection(v);
-  p.smoothing();
   p.setTrackWidth(16); // Tune Little larger than actual
+  p.injection(v1);
+  p.smoothing();
   p.move(); 
-
-  
-  v = v2;
-  
-  dir = v[v.size()-1].subtraction(v[v.size()-2]);
-  dir = dir.normalize();
-  f = {v[v.size()-1].getX(), v[v.size()-1].getY()};
-  f = f.addition(Vector({dir.getX()*p.getLookAhead(), dir.getY()*p.getLookAhead()}));
-  v.push_back(f);
-  
-  pp p1(&O);
-  p1.injection(v);
-  p1.smoothing();
-  p1.setTrackWidth(16); // Tune Little larger than actual
-  p1.move(); 
-
-  // for (int i = 0; i < v.size(); i++) 
-  // {
-  //   printf("%f, %f,\n", v[i].getX(), v[i].getY());
-  // }
   
 }
 

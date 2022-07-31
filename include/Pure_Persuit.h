@@ -14,6 +14,7 @@ class pp
     double rAngle;
     Vector rPos;
     Vector lookAheadP;
+    Vector closest();
     double sign(double val);
     double lookAheadDist;
     double trackWidth;
@@ -21,6 +22,8 @@ class pp
     pp(Odometry *O);
     void setTrackWidth(double width);
     void setLookAheadDist(double dist);
+    void setWeightSmooth(double w);
+    void setTolerance(double t);
     double getLookAhead();
     void injection(std::vector<Vector>&v);
     void smoothing();
@@ -28,7 +31,6 @@ class pp
     double velAtPoint();
     double curvature();
     void lookAheadPoint();
-    Vector closest();
     void move();
 
     
