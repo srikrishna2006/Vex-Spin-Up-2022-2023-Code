@@ -14,6 +14,7 @@ pp::pp(Odometry *O) {
   lookAheadP = {0, 0};
   lookAheadDist = 5.0;
   trackWidth = 0;
+  tVel = 10; 
 }
 
 std::vector<Vector> pp::getNewPoints() 
@@ -35,6 +36,10 @@ void pp::setWeightSmooth(double w)
 void pp::setTolerance(double t)
 {
   tolerance = t;
+}
+void pp::setTVel(double v)
+{
+  tVel = v;
 }
 double pp::getLookAhead()
 {
@@ -64,10 +69,11 @@ void pp::injection(std::vector<Vector> &v)
   Vector f = {v[v.size()-1].getX(), v[v.size()-1].getY()};
   f = f.addition(Vector({dir.getX()*getLookAhead(), dir.getY()*getLookAhead()}));
   newPoints.push_back(f);
+  printf("injection: \n");
 
   for (int i = 0; i < newPoints.size(); i++) 
   {
-    printf("injection: %f, %f,\n", newPoints[i].getX(), newPoints[i].getY());
+    printf("%f, %f,\n", newPoints[i].getX(), newPoints[i].getY());
   }
 }
 void pp::smoothing() 
@@ -92,9 +98,10 @@ void pp::smoothing()
       change += fabs(newPoints[i].getY() - aux3);
     }
   }
+  printf("smoothing:\n ");
   for (int i = 0; i < newPoints.size(); i++) 
   {
-    printf("smooth: %f, %f,\n", newPoints[i].getX(), newPoints[i].getY());
+    printf(" %f, %f,\n", newPoints[i].getX(), newPoints[i].getY());
   }
 }
 
@@ -220,7 +227,6 @@ double pp::curvature()
 
 void pp::move()
 {
-  double tVel = 10; // target robot vel 
   double curvature = this->curvature();
   double leftVel = tVel * (2 - curvature * trackWidth)/2;
   double rightVel = tVel * (2 + curvature * trackWidth)/2;
@@ -258,6 +264,20 @@ void pp::move()
     LF.stop();
     RF.stop();
   
+}
+
+void movement(std::vector<Vector> &v,Odometry *O)
+{
+  pp p(O);
+  // Path smoothening parameters
+  p.setWeightSmooth(0.90);
+  p.setTolerance(0.0001);
+  p.setLookAheadDist(8); // Tune between 0 and 2*radius
+  p.setTrackWidth(16); // Tune Little larger than actual
+  p.setTVel(10); // Target velocity for robot to reach
+  p.injection(v); // Injection function
+  p.smoothing(); // Smoothing function
+  p.move(); // moves the bot
 }
 
 

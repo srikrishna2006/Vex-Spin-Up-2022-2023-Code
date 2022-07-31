@@ -18,12 +18,14 @@ class pp
     double sign(double val);
     double lookAheadDist;
     double trackWidth;
+    double tVel;
   public:
     pp(Odometry *O);
     void setTrackWidth(double width);
     void setLookAheadDist(double dist);
     void setWeightSmooth(double w);
     void setTolerance(double t);
+    void setTVel(double v);
     double getLookAhead();
     void injection(std::vector<Vector>&v);
     void smoothing();
@@ -32,6 +34,5 @@ class pp
     double curvature();
     void lookAheadPoint();
     void move();
-
-    
 };
+void movement(std::vector<Vector> &v,Odometry *O);

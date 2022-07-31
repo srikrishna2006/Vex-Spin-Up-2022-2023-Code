@@ -32,16 +32,10 @@ void autonomous(void) {
   Left.resetPosition();
   Right.resetPosition();
   Odometry O;
-  std::vector<Vector> v1{{0,0},{10,10},{15,15}};// path
+  std::vector<Vector> v1{{0,0},{-10,10},{-15,15}};// path
   std::vector<Vector> v2{{15,15},{10,10},{0,0}};// path
-  pp p(&O);
-  p.setWeightSmooth(0.90);
-  p.setLookAheadDist(8); // Tune between 0 and 2*radius
-  p.setTrackWidth(16); // Tune Little larger than actual
-  p.injection(v1);
-  p.smoothing();
-  p.move(); 
-  
+  std::vector<Vector> v3{{0,0},{0,10},{10,15},{0,25},{0,35}};// path
+  movement(v3,&O);
 }
 
 
